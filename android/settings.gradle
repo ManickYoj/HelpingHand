@@ -2,5 +2,10 @@ rootProject.name = 'HelpingHand'
 
 include ':app'
 
+// Import BLE module
 include ':react-native-ble-plx'
 project(':react-native-ble-plx').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-ble-plx/android')
+
+// Import YouTube Module
+include ':RCTYouTube', ':app'
+project(':RCTYouTube').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-youtube/android')

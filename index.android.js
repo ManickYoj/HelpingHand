@@ -1,44 +1,44 @@
 'use strict';
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
 
 import React, { Component } from 'react';
 import {
   AppRegistry,
   StyleSheet,
   Text,
-  View
+  View,
+  Platform,
 } from 'react-native';
 
+import apiKeys from './api-keys.js';
+
 import { BleManager } from 'react-native-ble-plx';
+import YouTube from 'react-native-youtube'
 
 export default class HelpingHand extends Component {
   constructor() {
     super()
     this.manager = new BleManager()
-  },
+  }
 
   componentWillMount() {
     if (Platform.OS === 'ios') {
       this.manager.onStateChange((state) => {
         if (state === 'PoweredOn') this.scanAndConnect()
       })
-    } else this.scanAndConnect()
-  },
+    } else {
+      // this.scanAndConnect()
+    }
+  }
 
   scanAndConnect() {
     this.manager.startDeviceScan(
       null,
       null,
       (error, device) => {
-        this.info("Scanning...")
         console.log(device)
 
         if (error) {
-          this.error(error.message)
+          console.error(error.message)
           return
         }
 
@@ -46,11 +46,25 @@ export default class HelpingHand extends Component {
         // Code continues from https://www.polidea.com/blog/ReactNative_and_Bluetooth_to_An_Other_level/
         console.log(device.name)
       })
-  },
+  }
 
   render() {
     return (
       <View style={styles.container}>
+         <YouTube
+          videoId="DEYIwJVmGn0" // The YouTube video ID
+          play={true}           // control playback of video with true/false
+          hidden={false}        // control visiblity of the entire view
+          playsInline={true}    // control whether the video should play inline
+
+          onReady={(e)=>{this.setState({isReady: true})}}
+          onChangeState={(e)=>{this.setState({status: e.state})}}
+          onChangeQuality={(e)=>{this.setState({quality: e.quality})}}
+          onError={(e)=>{this.setState({error: e.error})}}
+
+          style={{alignSelf: 'stretch', height: 300, backgroundColor: 'black', marginVertical: 10}}
+          apiKey={apiKeys.youtube}
+        />
         <Text style={styles.welcome}>
           Welcome to React Native!
         </Text>
